@@ -2,9 +2,9 @@ import React from "react";
 
 const AppBar = () => {
   return (
-    <div className="w-full bg-blue-100 p-4 text-center text-lg font-semibold border-b z-10">
+    <header className="bg-gray-100 w-full h-[60px] flex items-center justify-center text-center text-lg font-semibold border-b z-10">
       Trending Repos
-    </div>
+    </header>
   );
 };
 

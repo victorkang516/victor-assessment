@@ -3,21 +3,25 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import RepoItem from "./RepoItem";
 import Loader from "../../components/loader/Loader";
 import formatDate from "../../utils/formatDate";
-import { fetchRepos } from "../../services/repoService";
+import { getRepos } from "../../services/repoService";
 
 const TrendingReposList = () => {
   const [trendingRepos, setTrendingRepos] = useState([]);
   const [page, setPage] = useState(1);
 
-  const today = new Date();
-  const daysToSubtract = 10;
-  const datePast10Days = new Date(today);
-  datePast10Days.setDate(today.getDate() - daysToSubtract);
-  const formattedDate = formatDate(datePast10Days);
+  const getDate10DaysAgo = () => {
+    const today = new Date();
+    const daysToSubtract = 10;
+    const tenDaysAgo = new Date(today);
+    tenDaysAgo.setDate(today.getDate() - daysToSubtract);
+    return formatDate(tenDaysAgo);
+  };
+
+  const startDate = getDate10DaysAgo();
 
   const fetchData = async () => {
     try {
-      const response = await fetchRepos(formattedDate, page);
+      const response = await getRepos(startDate, page);
       setTrendingRepos((prevRepos) => [...prevRepos, ...response.data.items]);
       setPage((prevPage) => prevPage + 1);
     } catch (error) {
@@ -26,10 +30,10 @@ const TrendingReposList = () => {
   };
 
   useEffect(() => {
-    const loadData = () => {
+    const initialLoadData = () => {
       fetchData();
     };
-    loadData();
+    initialLoadData();
   }, []);
 
   return (
@@ -40,13 +44,13 @@ const TrendingReposList = () => {
         hasMore={true}
         loader={<Loader />}
         endMessage={
-          <p style={{ textAlign: "center" }}>
+          <p className="text-center">
             <b>No more repos</b>
           </p>
         }
       >
-        {trendingRepos.map((item, index) => (
-          <RepoItem item={item} key={index} />
+        {trendingRepos.map((item) => (
+          <RepoItem item={item} key={item.id} />
         ))}
       </InfiniteScroll>
     </div>

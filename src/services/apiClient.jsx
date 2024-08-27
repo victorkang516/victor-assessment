@@ -11,7 +11,6 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     console.error("API call failed:", error);
-    // Handle specific error cases
     if (error.response.status === 401) {
       console.error("Unauthorized");
     } else if (error.response.status === 404) {
