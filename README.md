@@ -1,4 +1,4 @@
-# Victor Kang Assesment
+# Victor Kang Assessment
 
 Technologies/Libraries used in this project:
 
