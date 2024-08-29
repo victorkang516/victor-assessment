@@ -7,11 +7,7 @@ const Root = () => {
   return (
     <div className="h-screen">
       <AppBar />
-
-      <main className="flex-1 max-w-[1080px] mx-auto">
-        <Outlet />
-      </main>
-
+      <Outlet />
       <BottomNavigation />
     </div>
   );

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import RepoItem from "./RepoItem";
-import Loader from "../../components/loader/Loader";
-import formatDate from "../../utils/formatDate";
 import { getRepos } from "../../services/repoService";
+import formatDate from "../../utils/formatDate";
+import RepoCard from "./RepoCard";
+import Loader from "../../components/loader/Loader";
 
 const TrendingReposList = () => {
-  const [trendingRepos, setTrendingRepos] = useState([]);
+  const [repos, setRepos] = useState([]);
   const [page, setPage] = useState(1);
 
   const getDate10DaysAgo = () => {
@@ -19,10 +19,11 @@ const TrendingReposList = () => {
 
   const startDate = getDate10DaysAgo();
 
-  const fetchData = async () => {
+  const fetchRepoData = async () => {
     try {
       const response = await getRepos(startDate, page);
-      setTrendingRepos((prevRepos) => [...prevRepos, ...response.data.items]);
+      const newRepos = response.data.items;
+      setRepos((prevRepos) => [...prevRepos, ...newRepos]);
       setPage((prevPage) => prevPage + 1);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -30,17 +31,17 @@ const TrendingReposList = () => {
   };
 
   useEffect(() => {
-    const initialLoadData = () => {
-      fetchData();
+    const loadRepoData = () => {
+      fetchRepoData();
     };
-    initialLoadData();
+    loadRepoData();
   }, []);
 
   return (
-    <div className="overflow-y-auto mb-16">
+    <div className="overflow-y-auto">
       <InfiniteScroll
-        dataLength={trendingRepos.length}
-        next={fetchData}
+        dataLength={repos.length}
+        next={fetchRepoData}
         hasMore={true}
         loader={<Loader />}
         endMessage={
@@ -49,8 +50,8 @@ const TrendingReposList = () => {
           </p>
         }
       >
-        {trendingRepos.map((item) => (
-          <RepoItem item={item} key={item.id} />
+        {repos.map((repo) => (
+          <RepoCard repo={repo} key={repo.id} />
         ))}
       </InfiniteScroll>
     </div>
